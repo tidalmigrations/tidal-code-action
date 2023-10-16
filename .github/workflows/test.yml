@@ -1,9 +1,38 @@
 on: [push]
 
 jobs:
-  hello_world_job:
+  doctor:
     runs-on: ubuntu-latest
-    name: A job to say validate the action
+    name: A job to run tidal doctor
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Tidal Doctor action step
+        uses: ./doctor
+        with:
+          tidal-email: '${{ secrets.TIDAL_EMAIL }}'
+          tidal-url: '${{ secrets.TIDAL_URL }}'
+          tidal-password: '${{ secrets.TIDAL_PASSWORD }}'
+        id: hello
+  ping:
+    runs-on: ubuntu-latest
+    name: A job to run tidal ping
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Tidal Ping action step
+        uses: ./ping
+        with:
+          tidal-email: '${{ secrets.TIDAL_EMAIL }}'
+          tidal-url: '${{ secrets.TIDAL_URL }}'
+          tidal-password: '${{ secrets.TIDAL_PASSWORD }}'
+  analyze-code:
+    runs-on: ubuntu-latest
+    name: A job to validate analyze code
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -15,4 +44,4 @@ jobs:
           tidal-email: '${{ secrets.TIDAL_EMAIL }}'
           tidal-url: '${{ secrets.TIDAL_URL }}'
           tidal-password: '${{ secrets.TIDAL_PASSWORD }}'
-        id: hello
+          app-id: '66'

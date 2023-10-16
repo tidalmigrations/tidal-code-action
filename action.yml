@@ -2,23 +2,29 @@ name: 'Tidal Tools Code Analysis'
 description: 'Run tidal'
 inputs:
   tidal-email:  # id of input
-    description: 'Who to greet'
+    description: 'The email for the Tidal Accelerator service user'
     required: true
   tidal-password:
-    description: 'Who to greet'
+    description: 'The password for the Tidal Accelerator service user'
     required: true
   tidal-url:
-    description: 'Who to greet'
+    description: 'The workspace for url for your Tidal Accelerator Account ex: https://workspace.tidal.cloud'
+    required: true
+  app-id:
+    description: 'The ID of the application that is linked to this repository'
     required: true
 runs:
   using: 'docker'
-  image: 'gcr.io/tidal-1529434400027/tidal-tools:latest'
+  image: 'docker://gcr.io/tidal-1529434400027/tidal-tools:latest'
   args:
-    - 'doctor'
-    - '--tidal-email'
-    - '${{inputs.tidal-email}}'
-    - '--tidal-password'
-    - '${{inputs.tidal-password}}'
-    - '--tidal-url'
-    - '${{inputs.tidal-url}}'
-
+    - --tidal-email
+    - '${{ inputs.tidal-email }}'
+    - --tidal-password
+    - '${{ inputs.tidal-password }}'
+    - --tidal-url
+    - '${{ inputs.tidal-url }}'
+    - analyze
+    - code
+    - --app-id
+    - '${{ inputs.app-id }}'
+    - '.'
