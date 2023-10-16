@@ -27,4 +27,4 @@ runs:
     - code
     - --app-id
     - '${{ inputs.app-id }}'
-    - '.'
+    - '${{ github.workspace }}'

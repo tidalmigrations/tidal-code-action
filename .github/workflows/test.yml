@@ -15,7 +15,6 @@ jobs:
           tidal-email: '${{ secrets.TIDAL_EMAIL }}'
           tidal-url: '${{ secrets.TIDAL_URL }}'
           tidal-password: '${{ secrets.TIDAL_PASSWORD }}'
-        id: hello
   ping:
     runs-on: ubuntu-latest
     name: A job to run tidal ping
@@ -38,7 +37,7 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Tidal Doctor action step
+      - name: Tidal Code Analyze action step
         uses: ./ # Uses an action in the root directory
         with:
           tidal-email: '${{ secrets.TIDAL_EMAIL }}'
