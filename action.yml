@@ -13,6 +13,10 @@ inputs:
   app-id:
     description: 'The ID of the application that is linked to this repository'
     required: true
+  directory:
+   description: 'The directory for tidal-tools to run code analysis on'
+   required: true
+   default: '${{ github.workspace }}'
 runs:
   using: 'docker'
   image: 'docker://gcr.io/tidal-1529434400027/tidal-tools:latest'
@@ -27,4 +31,4 @@ runs:
     - code
     - --app-id
     - '${{ inputs.app-id }}'
-    - '${{ github.workspace }}'
+    - '${{ inputs.directory }}'
