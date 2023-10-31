@@ -16,9 +16,8 @@ runs:
   args:
     - 'doctor'
     - '--tidal-email'
-    - '${{inputs.tidal-email}}'
+    - '${{ inputs.tidal-email }}'
     - '--tidal-password'
-    - '${{inputs.tidal-password}}'
+    - '${{ inputs.tidal-password }}'
     - '--tidal-url'
-    - '${{inputs.tidal-url}}'
-
+    - '${{ inputs.tidal-url }}'

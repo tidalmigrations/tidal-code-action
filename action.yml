@@ -14,9 +14,12 @@ inputs:
     description: 'The ID of the application that is linked to this repository'
     required: true
   directory:
-   description: 'The directory for tidal-tools to run code analysis on'
-   required: true
-   default: '${{ github.workspace }}'
+    description: 'The directory for tidal-tools to run code analysis on'
+    required: true
+    default: '${{ github.workspace }}'
+  debug:
+    description: 'Set the debug flag to true to enable increased logging'
+    required: false
 runs:
   using: 'docker'
   image: 'docker://gcr.io/tidal-1529434400027/tidal-tools:latest'
@@ -32,3 +35,4 @@ runs:
     - --app-id
     - '${{ inputs.app-id }}'
     - '${{ inputs.directory }}'
+    - ${{ inputs.debug == 'true' && '--debug' || '' }}
