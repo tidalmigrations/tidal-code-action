@@ -48,7 +48,6 @@ jobs:
         with:
           tidal-email: '${{ secrets.TIDAL_EMAIL }}'
           tidal-url: '${{ secrets.TIDAL_URL }}'
-          tidal-password: '${{ secrets.TIDAL_PASSWORD }}'
           app-id: '66'
           debug: true
       - name: Tidal Code Analyze action step without debug
@@ -56,5 +55,4 @@ jobs:
         with:
           tidal-email: '${{ secrets.TIDAL_EMAIL }}'
           tidal-url: '${{ secrets.TIDAL_URL }}'
-          tidal-password: '${{ secrets.TIDAL_PASSWORD }}'
           app-id: '66'    
