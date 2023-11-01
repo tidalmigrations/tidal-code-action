@@ -23,11 +23,11 @@ inputs:
 runs:
   using: 'docker'
   image: 'docker://gcr.io/tidal-1529434400027/tidal-tools:latest'
+  env:
+    TIDAL_PASSWORD: '${{ inputs.tidal-password }}'
   args:
     - --tidal-email
     - '${{ inputs.tidal-email }}'
-    - --tidal-password
-    - '${{ inputs.tidal-password }}'
     - --tidal-url
     - '${{ inputs.tidal-url }}'
     - analyze
