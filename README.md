@@ -40,7 +40,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - uses: tidalmigrations/tidal-code-action@v1
+    - uses: tidalmigrations/tidal-code-action@v0
       with:
         tidal-email: ${{ secrets.TIDAL_EMAIL }}
         tidal-password: ${{ secrets.TIDAL_PASSWORD }}
