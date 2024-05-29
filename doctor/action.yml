@@ -12,7 +12,7 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'gcr.io/tidal-1529434400027/tidal-tools:latest'
+  image: 'gcr.io/tidal-1529434400027/tidal-tools:last-stable'
   args:
     - 'doctor'
     - '--tidal-email'
