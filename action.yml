@@ -22,7 +22,7 @@ inputs:
     required: false
 runs:
   using: 'docker'
-  image: 'docker://gcr.io/tidal-1529434400027/tidal-tools:latest'
+  image: 'docker://gcr.io/tidal-1529434400027/tidal-tools:last-stable'
   args:
     - --tidal-email
     - '${{ inputs.tidal-email }}'
