@@ -1,0 +1,26 @@
+name: "Tidal Tools Code Analysis"
+description: "Run tidal code analysis on your repo"
+author: "Tidal Migrations"
+inputs:
+  tidal-email:
+    description: "The email for the Tidal Accelerator service user"
+    required: true
+  tidal-password:
+    description: "The password for the Tidal Accelerator service user"
+    required: true
+  tidal-url:
+    description:
+      "The workspace for url for your Tidaol Accelerator Account ex:
+      https://workspace.tidal.cloud"
+    required: true
+  app-id:
+    description: "The ID of the application that is linked to this repository"
+    required: true
+  directory:
+    description: "The directory for tidal-tools to run code analysis on"
+    required: true
+    default: "${{ github.workspace }}"
+
+runs:
+  using: node20
+  main: dist/index.js
