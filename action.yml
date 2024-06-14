@@ -10,7 +10,7 @@ inputs:
     required: true
   tidal-url:
     description:
-      "The workspace for url for your Tidaol Accelerator Account ex:
+      "The workspace for url for your Tidal Accelerator Account ex:
       https://workspace.tidal.cloud"
     required: true
   app-id:
