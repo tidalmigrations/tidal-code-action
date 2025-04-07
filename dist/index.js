@@ -28357,6 +28357,7 @@ const analyzeCode = async () => {
     const directory = (0, core_1.toPlatformPath)((0, core_1.getInput)("directory"));
     const appId = (0, core_1.getInput)("app-id");
     const pathToCli = await (0, exports.setup)();
+    await (0, exec_1.exec)(`${pathToCli}/tidal`, ["--version"]);
     (0, core_1.debug)("Running `tidal analyze code` command.`");
     await (0, exec_1.exec)(`${pathToCli}/tidal`, [
         "--tidal-email",

@@ -111,6 +111,8 @@ export const analyzeCode = async () => {
   const directory = toPlatformPath(getInput("directory"));
   const appId = getInput("app-id");
   const pathToCli = await setup();
+
+  await exec(`${pathToCli}/tidal`, ["--version"]);
   debug("Running `tidal analyze code` command.`");
 
   await exec(`${pathToCli}/tidal`, [
