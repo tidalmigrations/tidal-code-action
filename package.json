@@ -13,7 +13,13 @@
   "bugs": {
     "url": "https://github.com/actions/typescript-action/issues"
   },
-  "keywords": ["actions", "node", "analyze", "code", "tidal"],
+  "keywords": [
+    "actions",
+    "node",
+    "analyze",
+    "code",
+    "tidal"
+  ],
   "exports": {
     ".": "./dist/index.js"
   },
@@ -26,8 +32,8 @@
     "coverage": "npx make-coverage-badge --output-path ./badges/coverage.svg",
     "format:write": "npx prettier --write .",
     "format:check": "npx prettier --check .",
-    "lint": "npx eslint . -c ./eslint.config.mjs",
-    "package": "npx ncc build src/index.ts -o dist --source-map --license licenses.txt",
+    "lint": "npx eslint .",
+    "package": "npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "package:watch": "npm run package -- --watch",
     "test": "npx jest",
     "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
