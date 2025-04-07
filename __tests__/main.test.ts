@@ -146,6 +146,9 @@ describe("action", () => {
     expect(runMock).toHaveReturned();
     expect(execMock).toHaveBeenCalled();
     expect(execMock).toHaveBeenNthCalledWith(1, "./tidal-tools/tidal", [
+      "--version"
+    ]);
+    expect(execMock).toHaveBeenNthCalledWith(2, "./tidal-tools/tidal", [
       "--tidal-email",
       "test@tidalmigrations.com",
       "--tidal-password",
