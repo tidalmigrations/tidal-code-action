@@ -1,5 +1,5 @@
 {
-  description = "Flake utils demo";
+  description = "Development environment for tidal-code-action";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
@@ -7,14 +7,6 @@
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system}; in
       {
-        packages = rec {
-          hello = pkgs.hello;
-          default = hello;
-        };
-        apps = rec {
-          hello = flake-utils.lib.mkApp { drv = self.packages.${system}.hello; };
-          default = hello;
-        };
         # Add dependencies that are only needed for development
         devShells = {
           default = pkgs.mkShell {
