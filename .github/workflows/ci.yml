@@ -19,8 +19,9 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Setup Node.js
         id: setup-node
         uses: actions/setup-node@v6
@@ -51,8 +52,9 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Test Local Action
         id: test-action
         uses: ./
