@@ -1,30 +1,35 @@
 /**
  * Unit tests for the action's main functionality, src/main.ts
- *
- * These should be run as if the action was called from a workflow.
- * Specifically, the inputs listed in `action.yml` should be set as environment
- * variables following the pattern `INPUT_<INPUT_NAME>`.
  */
 
-import * as core from "@actions/core";
-import * as main from "../src/main";
-import * as tc from "@actions/tool-cache";
-import * as exec from "@actions/exec";
-import * as io from "@actions/io";
+import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 
-// Mock the action's main function
-const runMock = jest.spyOn(main, "analyzeCode");
-const setupMock = jest.spyOn(main, "setup");
+jest.unstable_mockModule("@actions/core", () => ({
+  debug: jest.fn(),
+  error: jest.fn(),
+  getInput: jest.fn(),
+  addPath: jest.fn(),
+  toPlatformPath: (p: string) => p
+}));
 
-// Mock the GitHub Actions core library
-let debugMock: jest.SpiedFunction<typeof core.debug>;
-let errorMock: jest.SpiedFunction<typeof core.error>;
-let getInputMock: jest.SpiedFunction<typeof core.getInput>;
+jest.unstable_mockModule("@actions/tool-cache", () => ({
+  downloadTool: jest.fn(),
+  extractTar: jest.fn()
+}));
 
-let downloadToolMock: jest.SpiedFunction<typeof tc.downloadTool>;
-let extractTarMock: jest.SpiedFunction<typeof tc.extractTar>;
-let fetchMock: jest.SpiedFunction<typeof fetch>;
-let mvMock: jest.SpiedFunction<typeof io.mv>;
+jest.unstable_mockModule("@actions/exec", () => ({
+  exec: jest.fn()
+}));
+
+jest.unstable_mockModule("@actions/io", () => ({
+  mv: jest.fn()
+}));
+
+const core = jest.mocked(await import("@actions/core"));
+const tc = jest.mocked(await import("@actions/tool-cache"));
+const exec = jest.mocked(await import("@actions/exec"));
+const io = jest.mocked(await import("@actions/io"));
+const main = await import("../src/main");
 
 const testInputs: Record<string, string> = {
   "tidal-email": "test@tidalmigrations.com",
@@ -38,20 +43,15 @@ describe("action", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    debugMock = jest.spyOn(core, "debug").mockImplementation();
-    errorMock = jest.spyOn(core, "error").mockImplementation();
-    getInputMock = jest.spyOn(core, "getInput").mockImplementation();
-    downloadToolMock = jest
-      .spyOn(tc, "downloadTool")
-      .mockImplementation(async () => Promise.resolve("tidal-tools.tar.gz"));
-    extractTarMock = jest
-      .spyOn(tc, "extractTar")
-      .mockImplementation(async () => Promise.resolve("./tidal-tools"));
-    mvMock = jest
-      .spyOn(io, "mv")
-      .mockImplementation(async () => Promise.resolve());
+    tc.downloadTool.mockImplementation(async () =>
+      Promise.resolve("tidal-tools.tar.gz")
+    );
+    tc.extractTar.mockImplementation(async () =>
+      Promise.resolve("./tidal-tools")
+    );
+    io.mv.mockImplementation(async () => Promise.resolve());
 
-    fetchMock = jest.spyOn(global, "fetch").mockImplementation(async () => {
+    jest.spyOn(global, "fetch").mockImplementation(async () => {
       const response = new Response("", {
         status: 301,
         headers: {
@@ -72,65 +72,62 @@ describe("action", () => {
   });
 
   it("adds tidal tools to the path", async () => {
-    const addToPathMock = jest.spyOn(core, "addPath");
-
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation((name) => testInputs[name] || "");
+    core.getInput.mockImplementation((name: string) => testInputs[name] || "");
 
     await main.setup();
-    expect(setupMock).toHaveReturned();
 
     // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(
+    expect(core.debug).toHaveBeenNthCalledWith(
       1,
       "Finding latest release for Tidal Tools"
     );
 
-    expect(debugMock).toHaveBeenNthCalledWith(
+    expect(core.debug).toHaveBeenNthCalledWith(
       2,
       "Downloading Tidal Tools CLI from https://get.tidal.sh/packages/v3.7.11/tidal-linux-amd64-v3.7.11.tar.gz"
     );
 
-    expect(debugMock).toHaveBeenNthCalledWith(
+    expect(core.debug).toHaveBeenNthCalledWith(
       3,
       expect.stringMatching("Extracting Tidal Tools CLI tar file")
     );
 
-    expect(debugMock).toHaveBeenNthCalledWith(
+    expect(core.debug).toHaveBeenNthCalledWith(
       4,
       expect.stringMatching(
         "Moving ./tidal-tools/tidal-v3.7.11/tidal to ./tidal-tools"
       )
     );
-    expect(debugMock).toHaveBeenNthCalledWith(
+    expect(core.debug).toHaveBeenNthCalledWith(
       5,
       expect.stringMatching("Tidal Tools CLI path is ./tidal-tools")
     );
 
-    expect(addToPathMock).toHaveBeenCalledWith("./tidal-tools");
+    expect(core.addPath).toHaveBeenCalledWith("./tidal-tools");
 
-    expect(errorMock).not.toHaveBeenCalled();
+    expect(core.error).not.toHaveBeenCalled();
   });
 
   it("tries to download tidal tools using the redirect url", async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation((name) => testInputs[name] || "");
+    core.getInput.mockImplementation((name: string) => testInputs[name] || "");
     await main.setup();
 
-    expect(fetchMock).toHaveBeenCalled();
-    expect(fetchMock).toHaveBeenNthCalledWith(
+    expect(global.fetch).toHaveBeenCalled();
+    expect(global.fetch).toHaveBeenNthCalledWith(
       1,
       "https://get.tidal.sh/tidal-linux-64-latest",
       { redirect: "manual" }
     );
 
-    expect(downloadToolMock).toHaveBeenCalledWith(
+    expect(tc.downloadTool).toHaveBeenCalledWith(
       "https://get.tidal.sh/packages/v3.7.11/tidal-linux-amd64-v3.7.11.tar.gz"
     );
 
-    expect(extractTarMock).toHaveBeenCalledWith("tidal-tools.tar.gz");
+    expect(tc.extractTar).toHaveBeenCalledWith("tidal-tools.tar.gz");
 
-    expect(mvMock).toHaveBeenCalledWith(
+    expect(io.mv).toHaveBeenCalledWith(
       "./tidal-tools/tidal-v3.7.11/tidal",
       "./tidal-tools"
     );
@@ -138,17 +135,14 @@ describe("action", () => {
 
   it("attempts to run tidal", async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation((name) => testInputs[name] || "");
-    const execMock = jest
-      .spyOn(exec, "exec")
-      .mockImplementation(async () => Promise.resolve(0));
+    core.getInput.mockImplementation((name: string) => testInputs[name] || "");
+    exec.exec.mockImplementation(async () => Promise.resolve(0));
     await main.analyzeCode();
-    expect(runMock).toHaveReturned();
-    expect(execMock).toHaveBeenCalled();
-    expect(execMock).toHaveBeenNthCalledWith(1, "./tidal-tools/tidal", [
+    expect(exec.exec).toHaveBeenCalled();
+    expect(exec.exec).toHaveBeenNthCalledWith(1, "./tidal-tools/tidal", [
       "--version"
     ]);
-    expect(execMock).toHaveBeenNthCalledWith(2, "./tidal-tools/tidal", [
+    expect(exec.exec).toHaveBeenNthCalledWith(2, "./tidal-tools/tidal", [
       "--tidal-email",
       "test@tidalmigrations.com",
       "--tidal-password",
