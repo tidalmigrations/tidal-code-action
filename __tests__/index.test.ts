@@ -2,20 +2,21 @@
  * Unit tests for the action's entrypoint, src/index.ts
  */
 
-import { jest, describe, it, expect } from "@jest/globals";
+import { vi, describe, it, expect, beforeEach } from "vitest";
+import * as main from "../src/main.js";
 
-jest.unstable_mockModule("../src/main", () => ({
-  analyzeCode: jest.fn(),
-  setup: jest.fn()
+vi.mock("../src/main", () => ({
+  analyzeCode: vi.fn(),
+  setup: vi.fn()
 }));
 
-const main = await import("../src/main");
-const mockedMain = jest.mocked(main);
-
 describe("index", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("calls run when imported", async () => {
     await import("../src/index");
-
-    expect(mockedMain.analyzeCode).toHaveBeenCalled();
+    expect(main.analyzeCode).toHaveBeenCalled();
   });
 });
