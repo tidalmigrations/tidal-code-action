@@ -10,7 +10,7 @@
         # Add dependencies that are only needed for development
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [ nodejs_22 git ];
+            buildInputs = with pkgs; [ nodejs git ];
           };
         };
       }
